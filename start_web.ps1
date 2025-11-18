@@ -1,0 +1,73 @@
+# Start the zkSNARK Authentication Web Application
+
+Write-Host "============================================================" -ForegroundColor Cyan
+Write-Host "    zkSNARK Authentication System - Web Mode" -ForegroundColor Cyan
+Write-Host "============================================================" -ForegroundColor Cyan
+Write-Host ""
+
+# Check if Python is available
+if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
+    Write-Host "ERROR: Python not found. Please install Python 3.8+" -ForegroundColor Red
+    exit 1
+}
+
+# Check if Node is available
+if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
+    Write-Host "ERROR: Node.js not found. Please install Node.js 16+" -ForegroundColor Red
+    exit 1
+}
+
+# Check if zkSNARK artifacts exist
+if (-not (Test-Path "static\auth.wasm")) {
+    Write-Host "WARNING: zkSNARK artifacts not found in static/" -ForegroundColor Yellow
+    Write-Host "Running artifact copy script..." -ForegroundColor Yellow
+    & ".\scripts\copy_artifacts.ps1"
+}
+
+Write-Host "Starting Backend API Server..." -ForegroundColor Green
+$backend = Start-Process python -ArgumentList "api_server.py" -PassThru -WindowStyle Normal
+Write-Host "Backend PID: $($backend.Id)" -ForegroundColor Gray
+Write-Host "Backend URL: http://localhost:8000" -ForegroundColor Gray
+Write-Host "API Docs: http://localhost:8000/docs" -ForegroundColor Gray
+Write-Host ""
+
+Start-Sleep -Seconds 2
+
+Write-Host "Starting Frontend Dev Server..." -ForegroundColor Green
+Push-Location frontend
+
+# Check if node_modules exists
+if (-not (Test-Path "node_modules")) {
+    Write-Host "Installing frontend dependencies..." -ForegroundColor Yellow
+    npm install
+}
+
+$frontend = Start-Process npm -ArgumentList "run", "dev" -PassThru -WindowStyle Normal
+Write-Host "Frontend PID: $($frontend.Id)" -ForegroundColor Gray
+Write-Host "Frontend URL: http://localhost:5173" -ForegroundColor Gray
+Write-Host ""
+
+Pop-Location
+
+Write-Host "============================================================" -ForegroundColor Cyan
+Write-Host "Both servers are starting up..." -ForegroundColor Green
+Write-Host ""
+Write-Host "Open your browser to: http://localhost:5173" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "Press Ctrl+C to stop both servers" -ForegroundColor Yellow
+Write-Host "============================================================" -ForegroundColor Cyan
+
+# Wait for user interrupt
+try {
+    while ($true) {
+        Start-Sleep -Seconds 1
+    }
+}
+finally {
+    Write-Host ""
+    Write-Host "Shutting down servers..." -ForegroundColor Yellow
+    Stop-Process -Id $backend.Id -Force -ErrorAction SilentlyContinue
+    Stop-Process -Id $frontend.Id -Force -ErrorAction SilentlyContinue
+    Write-Host "Servers stopped." -ForegroundColor Green
+}
+

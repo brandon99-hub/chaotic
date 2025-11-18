@@ -34,19 +34,31 @@ The proof reveals nothing about `X` beyond the fact that the prover knows a valu
 
 ## 🛠️ Technologies Used
 
+### Backend
 - **Python 3.x**: Core application logic
 - **NumPy**: Numerical computations for chaotic systems
+- **FastAPI**: Modern web API framework
+- **Uvicorn**: ASGI web server
+- **SHA-256**: Cryptographic hashing for password derivation
+
+### Frontend
+- **React 18**: UI framework
+- **Vite**: Build tool and dev server
+- **Tailwind CSS**: Utility-first styling
+- **snarkjs**: Browser-based zkSNARK proof generation
+
+### Cryptography
 - **Circom**: Circuit definition language for zkSNARKs
-- **snarkjs**: JavaScript toolkit for zkSNARK proof generation/verification
+- **snarkjs**: zkSNARK proof generation/verification toolkit
 - **Groth16**: zkSNARK proving system
 - **BN254 Curve**: Elliptic curve for finite field arithmetic
-- **SHA-256**: Cryptographic hashing for password derivation
 
 ## 📋 Prerequisites
 
 - Python 3.8 or higher
-- Node.js and npm (for snarkjs)
+- Node.js 16+ and npm
 - PowerShell (for setup scripts on Windows)
+- Modern web browser (for web interface)
 
 ## 🚀 Installation
 
@@ -83,9 +95,38 @@ This will:
 
 **Note**: When prompted for entropy during the ceremony, type any random text and press Enter.
 
+### 5. Setup Frontend (for Web Interface)
+```bash
+cd frontend
+npm install
+cd ..
+```
+
+The zkSNARK artifacts are already copied to the `static/` directory for web access.
+
 ## 💻 Usage
 
-### Start the Application
+### Option 1: Web Interface (Recommended)
+
+**Start the Backend API:**
+```bash
+python api_server.py
+```
+Server runs on `http://localhost:8000` with API docs at `/docs`
+
+**Start the Frontend:**
+```bash
+cd frontend
+npm install  # First time only
+npm run dev
+```
+Frontend runs on `http://localhost:5173`
+
+Open your browser and navigate to `http://localhost:5173` to use the web interface.
+
+### Option 2: Command-Line Interface
+
+**Start the CLI Application:**
 ```bash
 python main.py
 ```
@@ -148,13 +189,28 @@ chaotic/
 ├── keys/                         # Cryptographic keys
 │   ├── auth_proving_key.zkey    # Proving key
 │   └── auth_verification_key.json # Verification key
+├── static/                       # Web-accessible zkSNARK artifacts
+│   ├── auth.wasm                # WASM for browser
+│   ├── auth_proving_key.zkey    # Proving key for browser
+│   └── auth_verification_key.json # Verification key
+├── frontend/                     # React web interface
+│   ├── src/
+│   │   ├── components/          # React components
+│   │   ├── utils/               # API and crypto utilities
+│   │   ├── App.jsx              # Main app component
+│   │   └── main.jsx             # Entry point
+│   ├── package.json             # Node dependencies
+│   └── vite.config.js           # Vite configuration
 ├── chaotic_generator.py         # 6D hyper-chaotic RNG
 ├── hash_utils.py                # Hashing and field arithmetic
 ├── zksnark_utils.py             # zkSNARK proof generation/verification
 ├── zkp_protocol.py              # Client/Server protocol logic
+├── api_server.py                # FastAPI REST API server
 ├── main.py                      # Interactive CLI application
 ├── requirements.txt             # Python dependencies
-└── README.md                    # This file
+├── README.md                    # This file
+├── QUICKSTART.md                # Quick start guide
+└── frontend/README.md           # Frontend documentation
 ```
 
 ## 🔬 Technical Details
