@@ -1,20 +1,33 @@
 function Dashboard({ user, onLogout }) {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-4xl">
-        <div className="card p-8">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-96 h-96 bg-green-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>
+        <div className="absolute bottom-40 right-20 w-96 h-96 bg-primary-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse" style={{ animationDelay: '2s' }}></div>
+      </div>
+
+      <div className="w-full max-w-4xl relative z-10">
+        <div className="card p-8 relative overflow-hidden">
+          {/* Success gradient bar */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500"></div>
           <div className="text-center mb-8">
-            <div className="inline-block p-4 bg-green-500 bg-opacity-20 rounded-full mb-4">
-              <svg className="w-16 h-16 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+            <div className="inline-block relative mb-4">
+              <div className="absolute inset-0 bg-green-500 rounded-full blur-2xl opacity-30 animate-pulse"></div>
+              <div className="relative p-4 bg-green-500 bg-opacity-20 rounded-full border-4 border-green-500 border-opacity-30">
+                <svg className="w-16 h-16 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
             </div>
-            <h1 className="text-4xl font-bold text-white mb-2">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent mb-2">
               Welcome back, {user}!
             </h1>
-            <p className="text-xl text-gray-400">
-              Authentication Successful
-            </p>
+            <div className="inline-block px-4 py-2 bg-green-500 bg-opacity-20 border border-green-500 border-opacity-30 rounded-full">
+              <p className="text-sm text-green-300 font-medium">
+                ✓ Authentication Successful
+              </p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -67,33 +80,46 @@ function Dashboard({ user, onLogout }) {
             </div>
           </div>
 
-          <div className="bg-primary-500 bg-opacity-10 border border-primary-500 rounded-lg p-6 mb-6">
-            <h3 className="text-lg font-semibold text-white mb-3">Authentication Details</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
+          <div className="bg-gradient-to-br from-primary-500/10 to-purple-500/10 border border-primary-500 border-opacity-30 rounded-xl p-6 mb-6 backdrop-blur-sm">
+            <div className="flex items-center gap-2 mb-4">
+              <svg className="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <h3 className="text-lg font-semibold text-white">Authentication Details</h3>
+            </div>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between items-center p-2 bg-gray-900 bg-opacity-30 rounded-lg">
                 <span className="text-gray-400">Username:</span>
-                <span className="text-white font-mono">{user}</span>
+                <span className="text-white font-mono font-semibold">{user}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center p-2 bg-gray-900 bg-opacity-30 rounded-lg">
                 <span className="text-gray-400">Authentication Method:</span>
-                <span className="text-white">Groth16 zkSNARK</span>
+                <span className="text-primary-300 font-semibold">Groth16 zkSNARK</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Curve:</span>
-                <span className="text-white">BN254</span>
+              <div className="flex justify-between items-center p-2 bg-gray-900 bg-opacity-30 rounded-lg">
+                <span className="text-gray-400">Elliptic Curve:</span>
+                <span className="text-purple-300 font-semibold">BN254</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Status:</span>
-                <span className="text-green-400 font-semibold">Authenticated</span>
+              <div className="flex justify-between items-center p-2 bg-green-500 bg-opacity-20 rounded-lg border border-green-500 border-opacity-30">
+                <span className="text-gray-300">Status:</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-green-400 font-bold">Authenticated</span>
+                </div>
               </div>
             </div>
           </div>
 
           <button
             onClick={onLogout}
-            className="w-full btn-secondary"
+            className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-red-500/50 transform hover:-translate-y-0.5"
           >
-            Logout
+            <div className="flex items-center justify-center gap-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              Logout
+            </div>
           </button>
         </div>
       </div>

@@ -25,10 +25,6 @@ app.add_middleware(
 
 server_instance = Server()
 
-static_dir = Path("static")
-if static_dir.exists():
-    app.mount("/static", StaticFiles(directory="static"), name="static")
-
 
 class RegisterRequest(BaseModel):
     hr_id: str
@@ -141,6 +137,11 @@ async def list_users():
         "users": list(server_instance.users.keys()),
         "count": len(server_instance.users)
     }
+
+
+static_dir = Path("static")
+if static_dir.exists():
+    app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 def start_server(host: str = "0.0.0.0", port: int = 8000):

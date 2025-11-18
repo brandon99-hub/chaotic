@@ -25,7 +25,7 @@ if (-not (Test-Path "static\auth.wasm")) {
 }
 
 Write-Host "Starting Backend API Server..." -ForegroundColor Green
-$backend = Start-Process python -ArgumentList "api_server.py" -PassThru -WindowStyle Normal
+$backend = Start-Process powershell -ArgumentList "-NoExit", "-Command", "python api_server.py" -PassThru
 Write-Host "Backend PID: $($backend.Id)" -ForegroundColor Gray
 Write-Host "Backend URL: http://localhost:8000" -ForegroundColor Gray
 Write-Host "API Docs: http://localhost:8000/docs" -ForegroundColor Gray
@@ -34,20 +34,22 @@ Write-Host ""
 Start-Sleep -Seconds 2
 
 Write-Host "Starting Frontend Dev Server..." -ForegroundColor Green
-Push-Location frontend
+
+# Get the frontend directory path
+$frontendPath = Join-Path (Get-Location) "frontend"
 
 # Check if node_modules exists
-if (-not (Test-Path "node_modules")) {
+if (-not (Test-Path "$frontendPath\node_modules")) {
     Write-Host "Installing frontend dependencies..." -ForegroundColor Yellow
+    Push-Location $frontendPath
     npm install
+    Pop-Location
 }
 
-$frontend = Start-Process npm -ArgumentList "run", "dev" -PassThru -WindowStyle Normal
+$frontend = Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$frontendPath'; npm run dev" -PassThru
 Write-Host "Frontend PID: $($frontend.Id)" -ForegroundColor Gray
 Write-Host "Frontend URL: http://localhost:5173" -ForegroundColor Gray
 Write-Host ""
-
-Pop-Location
 
 Write-Host "============================================================" -ForegroundColor Cyan
 Write-Host "Both servers are starting up..." -ForegroundColor Green
